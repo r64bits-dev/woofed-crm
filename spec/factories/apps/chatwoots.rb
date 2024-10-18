@@ -21,9 +21,9 @@ FactoryBot.define do
     name { 'Connection testing' }
     status { 'active' }
     active { true }
-    chatwoot_endpoint_url { ENV['CHATWOOT_ENDPOINT'] || 'http://localhost:3000' }
+    chatwoot_endpoint_url { ENV['CHATWOOT_ENDPOINT'] || 'http://localhost:4007' }
     chatwoot_user_token { ENV['CHATWOOT_TOKEN'] || 'token' }
-    embedding_token { 'http://localhost:3002' }
+    embedding_token { 'http://localhost:4008' }
     chatwoot_account_id { '5' }
     chatwoot_dashboard_app_id { '1' }
     chatwoot_webhook_id { '1' }

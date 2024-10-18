@@ -1,19 +1,28 @@
-version: '3.7'                                                                                                                                                                                 
-                                                                                                                                                                                               
-services:                                                                                                                                                                                          
-  postgres:              
-    image: pgvector/pgvector:pg16                                                                                                                                                                      
-    volumes:                                                                                                                                                                                   
-      - woofed-crm-pg-volume:/var/lib/postgresql/data                                                                                                                                               
-    environment:                                                                                                                                                                                  
-      POSTGRES_PASSWORD: password                                                                                                                                                                            
-    ports:                                                                                                                                                                                     
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgreswoof
+    image: pgvector/pgvector:pg16
+    volumes:
+      - woofed-crm-pg-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
       - "5432:5432"
+    networks:
+      - woof
   redis:
     image: 'redis:6.2.7-alpine'
     ports:
       - '6379:6379'
+    networks:
+      - woof
 
 volumes:
   woofed-crm-pg-volume:
       external: false
+
+networks:
+  woof:
+    external: true
