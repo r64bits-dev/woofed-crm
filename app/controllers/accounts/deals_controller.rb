@@ -2,7 +2,7 @@ class Accounts::DealsController < InternalController
   include ProductConcern
 
   before_action :set_deal,
-                only: %i[show edit update destroy events events_to_do events_done deal_products]
+                only: %i[show edit update destroy events events_to_do events_done deal_products deal_assignees]
   before_action :set_deal_product, only: %i[edit_product
                                             update_product]
 
@@ -129,6 +129,10 @@ class Accounts::DealsController < InternalController
 
   def deal_products
     @deal_products = @deal.deal_products
+  end
+
+  def deal_assignees
+    @deal_assignees = @deal.deal_assignees
   end
 
   def edit_product
