@@ -6,7 +6,7 @@
     "heroku-prebuild": "yarn build"
   },
   "dependencies": {
-    "@hotwired/turbo-rails": "^7.1.3",
+    "@hotwired/turbo-rails": "^8.0.12",
     "@nathanvda/cocoon": "^1.2.14",
     "@rails/actioncable": "^7.1.501",
     "@rails/actiontext": "^7.1.501",
