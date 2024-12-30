@@ -10,7 +10,12 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
   let!(:pipeline) { create(:pipeline) }
   let!(:stage) { create(:stage, pipeline:) }
   let!(:deal) { create(:deal, contact:, stage:) }
-  let(:conversation_response) { File.read('spec/integration/use_cases/accounts/apps/chatwoots/get_conversations.json') }
+  let(:conversation_response) do
+    File.read('spec/integration/use_cases/accounts/apps/chatwoots/get_conversations.json')
+  end
+  let(:create_conversation_response) do
+    File.read('spec/integration/use_cases/accounts/apps/chatwoots/create_conversation.json')
+  end
   let(:message_response) { File.read('spec/integration/use_cases/accounts/apps/chatwoots/send_message.json') }
   let(:send_text_response) do
     File.read('spec/integration/use_cases/accounts/apps/evolution_api/message/send_text_response.json')
@@ -50,8 +55,10 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
         sign_in(user)
         stub_request(:post, /messages/)
           .to_return(body: message_response, status: 200, headers: { 'Content-Type' => 'application/json' })
-        stub_request(:post, /filter/)
-          .to_return(body: conversation_response, status: 200, headers: { 'Content-Type' => 'application/json' })
+        stub_request(:get, /conversations/)
+          .to_return(body: { payload: [] }.to_json, status: 200, headers: { 'Content-Type' => 'application/json' })
+        stub_request(:post, /conversations/)
+          .to_return(body: create_conversation_response, status: 200, headers: { 'Content-Type' => 'application/json' })
         stub_request(:post, /sendText/)
           .to_return(body: send_text_response, status: 201, headers: { 'Content-Type' => 'application/json' })
       end
@@ -315,7 +322,9 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
 
   describe 'PATCH /accounts/{account.id}/contacts/{contact.id}/events/{event.id}' do
     before do
-      stub_request(:post, /conversations/).to_return(body: conversation_response, status: 200,
+      stub_request(:get, /conversations/).to_return(body: conversation_response, status: 200,
+                                                    headers: { 'Content-Type' => 'application/json' })
+      stub_request(:post, /conversations/).to_return(body: create_conversation_response, status: 200,
                                                      headers: { 'Content-Type' => 'application/json' })
     end
 
@@ -421,7 +430,7 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
       end
     end
   end
-  describe 'DELETE /accounts/{account.id}/contacts/{contact.id}/events/{event.id}' do
+  describe 'DELETE /accounts/#{account.id}/contacts/#{contact.id}/events/#{event.id}' do
     let(:event) { create(:event, contact:, deal:, kind: 'activity') }
     context 'when it is unthenticated user' do
       it 'returns unauthorized' do
