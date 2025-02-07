@@ -7,6 +7,18 @@ export default class extends Controller {
 
   search(event) {
     const query = event.target.value.trim();
+    this.performSearch(query);
+  }
+
+  searchButton() {
+    const input = this.element.querySelector("input[type='text']");
+    if (input) {
+      const query = input.value.trim();
+      this.performSearch(query);
+    }
+  }
+
+  performSearch(query) {
     const url = query
       ? `${this.element.action}?q=${encodeURIComponent(query)}`
       : this.element.action;
