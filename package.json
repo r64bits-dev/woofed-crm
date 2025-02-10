@@ -1,6 +1,7 @@
 {
   "name": "woofed-crm",
   "private": true,
+  "node": "20.x",
   "scripts": {
     "build": "yarn install",
     "heroku-prebuild": "yarn build"
