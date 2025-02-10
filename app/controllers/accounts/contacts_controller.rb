@@ -18,21 +18,8 @@ class Accounts::ContactsController < InternalController
   end
 
   def search
-    @contacts = current_user.account.contacts.where(
-      'full_name ILIKE :search OR email ILIKE :search OR phone ILIKE :search', search: "%#{params[:q]}%"
-    ).limit(5).map(&:attributes)
-
-    @results = @contacts.each do |c|
-      c[:text] = "#{c['full_name']} - #{c['email']} - #{c['phone']}"
-      c
-    end
-
-    @results.insert(0, { "id": 0, "text": 'New contact' })
-
-    json = {
-      "results": @results
-    }
-    render json: json
+    @contacts = search_contacts
+    render json: { results: format_search_results }
   end
 
   # GET /contacts/new
@@ -112,5 +99,34 @@ class Accounts::ContactsController < InternalController
   def contact_params
     params.require(:contact).permit(:full_name, :phone, :email, :label_list,
                                     custom_attributes: {})
+  end
+
+  def search_contacts
+    if params[:q].present?
+      current_user.account.contacts.where(search_condition, search: "%#{params[:q]}%").limit(5)
+    else
+      current_user.account.contacts.limit(10)
+    end
+  end
+
+  def search_condition
+    'full_name ILIKE :search OR email ILIKE :search OR phone ILIKE :search'
+  end
+
+  def format_search_results
+    results = @contacts.map do |contact|
+      format_contact(contact)
+    end
+    results.insert(0, { "id": 0, "text": 'New contact' })
+  end
+
+  def format_contact(contact)
+    {
+      id: contact.id,
+      full_name: contact.full_name,
+      email: contact.email,
+      phone: contact.phone,
+      text: "#{contact.full_name} - #{contact.email} - #{contact.phone}"
+    }
   end
 end

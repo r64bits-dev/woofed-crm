@@ -1,7 +1,31 @@
 <section class="m-8 bg-light-palette-p5 border-2 border-light-palette-p3 rounded-md ">
-  <ul class="px-4 py-5 space-y-5" id='contacts'>
-    <%= render partial: 'contact', collection: @contacts, as: :contact  %>
+  <!-- Campo de busca -->
+  <div class="p-4">
+    <%= form_with url: search_account_contacts_path(current_user.account),
+        method: :get, local: false,
+        data: { controller: "contact-search",
+                turbo_frame: "search_#{current_user.account.id}" } do |f| %>
+
+      <div class="flex gap-2">
+        <%= f.text_field :q,
+              placeholder: "Buscar contatos...",
+              class: "w-full p-2 border border-gray-300 rounded",
+              data: { action: "input->contact-search#search" } %>
+
+        <button type="button"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                data-action="click->contact-search#searchButton">
+          Pesquisar
+        </button>
+      </div>
+
+    <% end %>
+  </div>
+
+  <ul class="px-4 py-5 space-y-5" id="contacts">
+    <%= render partial: 'contact', collection: @contacts, as: :contact %>
   </ul>
+
   <div class="float-right py-6">
     <%== pagy_nav(@pagy) %>
   </div>
