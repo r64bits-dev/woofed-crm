@@ -5,6 +5,5 @@
   - chatwoot_webhooks
   - evolution_api_webhooks
 
-# TODO: Fix webhooks queue to FIFO order
-# :limits:
-#   chatwoot_webhooks: 1
+:limits:
+  chatwoot_webhooks: 3
