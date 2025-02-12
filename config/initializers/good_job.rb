@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
+  config.good_job.max_attempts = ENV.fetch('GOOD_JOB_MAX_ATTEMPTS', 3).to_i
   config.good_job.enable_cron = true
   config.good_job.cron = {
     evolution_api_refresh_status: { cron: '0 * * * *',
