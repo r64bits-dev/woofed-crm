@@ -5,6 +5,8 @@ class Accounts::Apps::Chatwoots::Webhooks::ImportContact
   end
 
   def self.get_or_import_contact(chatwoot, contact_id)
+    return 'Chatwoot not found' if chatwoot.blank? || chatwoot.account.blank?
+
     contact = chatwoot.account.contacts.where(
       "additional_attributes->>'chatwoot_id' = ?", contact_id.to_s
     ).first
