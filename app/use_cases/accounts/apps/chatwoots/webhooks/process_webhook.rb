@@ -1,6 +1,6 @@
 class Accounts::Apps::Chatwoots::Webhooks::ProcessWebhook
   def self.call(webhook)
-    chatwoot = Apps::Chatwoot.last
+    chatwoot = Apps::Chatwoot.find_by(embedding_token: webhook['token'])
     puts('Processa o webhook')
     puts(webhook, chatwoot)
 
