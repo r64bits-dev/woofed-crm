@@ -1,8 +1,8 @@
 class Accounts::Apps::Chatwoots::Webhooks::ProcessWebhook
   def self.call(webhook)
-    chatwoot = Apps::Chatwoot.find_by(embedding_token: webhook['token'])
+    chatwoot = Apps::Chatwoot.last
     puts('Processa o webhook')
-    puts(webhook)
+    puts(webhook, chatwoot)
 
     if webhook['event'].include?('contact_')
       Accounts::Apps::Chatwoots::Webhooks::Events::Contact.call(
