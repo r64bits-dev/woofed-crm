@@ -5,7 +5,6 @@ class Accounts::Apps::Chatwoots::ExportContact
 
   def self.create_or_update_contact(chatwoot, contact)
     contact_chatwoot_id = contact['additional_attributes']['chatwoot_id']
-
     if contact_chatwoot_id.present?
       update_contact(chatwoot, contact)
     else
@@ -48,7 +47,7 @@ class Accounts::Apps::Chatwoots::ExportContact
       update_contact_chatwoot_id_and_identifier(contact, search_chatwoot_contact['id'],
                                                 search_chatwoot_contact['identifier'])
       { ok: contact }
-    elsif request.status == 422 && response_body['attributes'].include?('phone')
+    elsif request.status == 422 && response_body['attributes'].include?('phone_number')
       search_chatwoot_contact = Accounts::Apps::Chatwoots::SearchContact.call(chatwoot, contact['phone'])
       update_contact_chatwoot_id_and_identifier(contact, search_chatwoot_contact['id'],
                                                 search_chatwoot_contact['identifier'])
