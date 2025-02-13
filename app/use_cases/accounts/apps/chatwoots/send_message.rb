@@ -26,6 +26,7 @@ class Accounts::Apps::Chatwoots::SendMessage
   end
 
   def self.send_message_without_attachment(chatwoot, conversation_id, event)
+    p 'send message without attachament', conversation_id, event
     request = Faraday.post(
       "#{chatwoot.chatwoot_endpoint_url}/api/v1/accounts/#{chatwoot.chatwoot_account_id}/conversations/#{conversation_id}/messages",
       build_body(event).to_json,
