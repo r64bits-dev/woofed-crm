@@ -35,6 +35,7 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@webpack-cli/serve": "^1.5.2",
     "localtunnel": "^2.0.2"
   },
