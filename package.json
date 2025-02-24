@@ -7,8 +7,6 @@
     "heroku-prebuild": "yarn build"
   },
   "dependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@hotwired/turbo-rails": "^8.0.12",
     "@nathanvda/cocoon": "^1.2.14",
     "@rails/actioncable": "^7.1.501",
@@ -39,9 +37,5 @@
   "devDependencies": {
     "@webpack-cli/serve": "^1.5.2",
     "localtunnel": "^2.0.2"
-  },
-  "engines": {
-    "node": "20.x",
-    "yarn": "1.22.x"
   }
 }
