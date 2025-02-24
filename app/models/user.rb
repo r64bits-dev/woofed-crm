@@ -28,7 +28,7 @@
 #
 #  fk_rails_...  (account_id => accounts.id)
 #
-class User < ApplicationRecord
+class User < AccountRecord
   has_one :installation
   has_many :webpush_subscriptions
   has_many :deal_assignees, dependent: :destroy
@@ -43,6 +43,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  belongs_to :account, default: -> { Current.account }
   accepts_nested_attributes_for :account
 
   attribute :language, :string, default: ENV.fetch('LANGUAGE', 'en')

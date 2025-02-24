@@ -70,8 +70,9 @@ RSpec.describe Installation do
       end
     end
 
-    context 'when is inatalled' do
-      let!(:installation) { create(:installation, status: 'completed') }
+    context 'when is installed' do
+      let!(:account) { create(:account) }
+      let!(:installation) { create(:installation, status: 'completed', account:) }
 
       it do
         expect(Installation.installation_flow?).to eq(false)

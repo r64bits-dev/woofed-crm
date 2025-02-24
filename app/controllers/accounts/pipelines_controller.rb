@@ -8,7 +8,7 @@ class Accounts::PipelinesController < InternalController
 
   # GET /pipelines or /pipelines.json
   def index
-    pipeline = Pipeline.first
+    pipeline = Current.account.pipelines.first
     if pipeline
       redirect_to(account_pipeline_path(Current.account, pipeline))
     else
@@ -18,7 +18,13 @@ class Accounts::PipelinesController < InternalController
 
   # GET /pipelines/1 or /pipelines/1.json
   def show
-    @pipelines = Pipeline.all
+    @pipelines = Current.account.pipelines.all
+
+    if @pipelines.empty?
+      redirect_to account_welcome_index_path(Current.account)
+      return
+    end
+
     @filter_status_deal = if params[:filter_status_deal].present?
                             params[:filter_status_deal]
                           else
@@ -163,7 +169,8 @@ class Accounts::PipelinesController < InternalController
 
   # POST /pipelines or /pipelines.json
   def create
-    @pipeline = Pipeline.new(pipeline_params)
+    @pipeline = Current.account.pipelines.build(pipeline_params)
+    @pipeline.stages.each { |stage| stage.account = Current.account }
 
     respond_to do |format|
       if @pipeline.save
@@ -182,7 +189,12 @@ class Accounts::PipelinesController < InternalController
   # PATCH/PUT /pipelines/1 or /pipelines/1.json
   def update
     respond_to do |format|
-      if @pipeline.update(pipeline_params)
+      modified_params = pipeline_params.dup
+      modified_params[:stages_attributes].each do |_key, stage_attrs|
+        stage_attrs[:account_id] = Current.account.id if stage_attrs[:account_id].blank?
+      end
+
+      if @pipeline.update(modified_params)
         format.html do
           redirect_to account_pipeline_path(Current.account, @pipeline),
                       notice: t('flash_messages.updated', model: Pipeline.model_name.human)
@@ -208,7 +220,10 @@ class Accounts::PipelinesController < InternalController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_pipeline
-    @pipeline = Pipeline.find(params[:id])
+    @pipeline = Current.account.pipelines.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to account_welcome_index_path(Current.account), 
+                alert: t('flash_messages.not_found', model: Pipeline.model_name.human)
   end
 
   def contact_exists?(params)

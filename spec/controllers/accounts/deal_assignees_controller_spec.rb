@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Accounts::DealAssigneesController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
-  let!(:contact) { create(:contact) }
-  let!(:pipeline) { create(:pipeline) }
-  let!(:stage) { create(:stage, pipeline:) }
-  let!(:deal) { create(:deal, stage:, contact:) }
+  let!(:user) { create(:user, account:) }
+  let!(:contact) { create(:contact, account:) }
+  let!(:pipeline) { create(:pipeline, account:) }
+  let!(:stage) { create(:stage, pipeline:, account:) }
+  let!(:deal) { create(:deal, stage:, contact:, account:) }
 
   describe 'DELETE /accounts/{account.id}/deal_assignees/{deal_assignee.id}' do
     let!(:deal_assignee) { create(:deal_assignee, deal:, user:) }

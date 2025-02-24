@@ -11,6 +11,6 @@ class Accounts::AttachmentsController < InternalController
   private
 
   def set_attachment
-    @attachment = Attachment.find(params[:id])
+    @attachment = current_user.account.attachments.find(params[:id])
   end
 end

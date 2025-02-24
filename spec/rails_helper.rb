@@ -45,6 +45,8 @@ include ActiveJob::TestHelper
 RSpec.configure do |config|
   config.before(:each) do
     Sidekiq::Worker.clear_all
+    ENV['EVOLUTION_API_ENDPOINT'] = 'http://test-api.example.com'
+    ENV['EVOLUTION_API_ENDPOINT_TOKEN'] = 'test_token'
   end
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :request

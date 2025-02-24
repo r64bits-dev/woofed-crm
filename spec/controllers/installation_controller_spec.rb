@@ -84,7 +84,7 @@ RSpec.describe InstallationController, type: :request do
       end
       context 'when there is an installation' do
         context 'when installation status is completed' do
-          let!(:installation) { create(:installation, status: 'completed') }
+          let!(:installation) { create(:installation, status: 'completed', account:) }
 
           it 'should not create user and installation and raise route error' do
             first_installation.app_reload
@@ -95,7 +95,7 @@ RSpec.describe InstallationController, type: :request do
           end
         end
         context 'when installation status is in_progress' do
-          let!(:installation) { create(:installation, status: 'in_progress') }
+          let!(:installation) { create(:installation, status: 'in_progress', account:) }
           it 'should create user, update installation and redirect to step_1 path' do
             expect do
               get '/installation/create',
@@ -140,7 +140,7 @@ RSpec.describe InstallationController, type: :request do
       end
       context 'when there is an installation' do
         context 'when installation status is completed' do
-          let!(:installation) { create(:installation, status: 'completed') }
+          let!(:installation) { create(:installation, status: 'completed', account:) }
           it 'should not create user and installation and raise route error' do
             first_installation.app_reload
             get '/installation/create',
@@ -150,7 +150,7 @@ RSpec.describe InstallationController, type: :request do
           end
         end
         context 'when installation status is in_progress' do
-          let!(:installation) { create(:installation, status: 'in_progress') }
+          let!(:installation) { create(:installation, status: 'in_progress', account:) }
           it 'should create user, update installation and redirect to step_1' do
             expect do
               get '/installation/create',
@@ -185,7 +185,7 @@ RSpec.describe InstallationController, type: :request do
         let!(:user) { create(:user, account:) }
         context 'when there is an instalation' do
           context 'when installation status is completed' do
-            let!(:installation) { create(:installation, status: 'completed') }
+            let!(:installation) { create(:installation, status: 'completed', account:) }
 
             it 'should redirect to new devise sign in path' do
               get '/accounts/1/users'
@@ -194,7 +194,7 @@ RSpec.describe InstallationController, type: :request do
             end
           end
           skip 'when installation status is in_progress' do
-            let!(:installation) { create(:installation, status: 'in_progress') }
+            let!(:installation) { create(:installation, status: 'in_progress', account:) }
 
             it 'should redirect to new installation path' do
               get '/accounts/1/users'
@@ -219,7 +219,7 @@ RSpec.describe InstallationController, type: :request do
 
         context 'when there is an installation' do
           context 'when installation status is completed' do
-            let!(:installation) { create(:installation, status: 'completed') }
+            let!(:installation) { create(:installation, status: 'completed', account:) }
 
             it 'should get users url' do
               get '/accounts/1/users'
@@ -229,7 +229,7 @@ RSpec.describe InstallationController, type: :request do
           end
 
           context 'when installation status is in_progress' do
-            let!(:installation) { create(:installation, status: 'in_progress') }
+            let!(:installation) { create(:installation, status: 'in_progress', account:) }
 
             it 'should redirect to new installation url' do
               get '/accounts/1/users'
@@ -252,7 +252,7 @@ RSpec.describe InstallationController, type: :request do
       end
       context 'when there is an installation' do
         context 'when installation status is completed' do
-          let!(:installation) { create(:installation, status: 'completed') }
+          let!(:installation) { create(:installation, status: 'completed', account:) }
           it 'should raise route error' do
             first_installation.app_reload
             get '/installation/new'
@@ -260,7 +260,7 @@ RSpec.describe InstallationController, type: :request do
           end
         end
         context 'when installation status is in_progress' do
-          let!(:installation) { create(:installation, status: 'in_progress') }
+          let!(:installation) { create(:installation, status: 'in_progress', account:) }
           it 'should get new installation url' do
             get '/installation/new'
             expect(response).to have_http_status(200)
@@ -310,7 +310,7 @@ RSpec.describe InstallationController, type: :request do
       end
       context 'when there is an installation' do
         context 'when installation status is completed' do
-          let!(:installation) { create(:installation, status: 'completed') }
+          let!(:installation) { create(:installation, status: 'completed', account:) }
           it 'should raise route error' do
             first_installation.app_reload
             get '/installation/step_1'
@@ -318,7 +318,7 @@ RSpec.describe InstallationController, type: :request do
           end
         end
         context 'when installation status is in_progress' do
-          let!(:installation) { create(:installation, status: 'in_progress') }
+          let!(:installation) { create(:installation, status: 'in_progress', account:) }
           it 'should get step_1 installation url' do
             get '/installation/step_1'
             expect(response).to have_http_status(200)
@@ -366,7 +366,7 @@ RSpec.describe InstallationController, type: :request do
 
       context 'when there is installation' do
         context 'when installation status is completed' do
-          let!(:installation) { create(:installation, status: 'completed') }
+          let!(:installation) { create(:installation, status: 'completed', account:) }
           it 'should raise route error' do
             first_installation.app_reload
             patch '/installation/update_step_1', params: { user: { full_name: 'Yukio', phone: '+552299887875' } }
@@ -375,7 +375,7 @@ RSpec.describe InstallationController, type: :request do
           end
         end
         context 'when installation status is in_progress' do
-          let(:installation) { create(:installation, status: 'in_progress') }
+          let(:installation) { create(:installation, status: 'in_progress', account:) }
           it 'should update user and redirect to step 2 installation path' do
             patch '/installation/update_step_1', params: { user: { full_name: 'Yukio', phone: '+552299887875' } }
             expect(response).to have_http_status(302)
@@ -455,7 +455,8 @@ RSpec.describe InstallationController, type: :request do
       end
     end
     context 'when it is an authenticated user' do
-      let!(:user) { create(:user) }
+      let!(:account) { create(:account) }
+      let!(:user) { create(:user, account:) }
 
       before do
         sign_in user
@@ -488,7 +489,8 @@ RSpec.describe InstallationController, type: :request do
       end
     end
     context 'when it is an authenticated user' do
-      let!(:user) { create(:user) }
+      let!(:account) { create(:account) }
+      let!(:user) { create(:user, account:) }
 
       before do
         sign_in user
@@ -550,8 +552,9 @@ RSpec.describe InstallationController, type: :request do
       end
     end
     context 'when it is an authenticated user' do
-      let!(:user) { create(:user) }
-      let!(:installation) { create(:installation, status: 'in_progress') }
+      let!(:account) { create(:account) }
+      let!(:user) { create(:user, account:) }
+      let!(:installation) { create(:installation, status: 'in_progress', account:) }
 
       before do
         sign_in user

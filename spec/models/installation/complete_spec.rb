@@ -15,10 +15,10 @@ RSpec.describe Installation do
   end
 
   context '#complete_installation!' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user, account:) }
 
     context 'when there is in_progress installation registered' do
-      let!(:installation) { create(:installation, status: 'in_progress') }
+      let!(:installation) { create(:installation, status: 'in_progress', account:) }
 
       context 'when there is an account registered' do
         let!(:account) { create(:account) }
@@ -40,7 +40,7 @@ RSpec.describe Installation do
     end
 
     context 'when there is completed installation registered' do
-      let!(:installation) { create(:installation, status: 'completed') }
+      let!(:installation) { create(:installation, status: 'completed', account:) }
       let!(:account) { create(:account) }
       it 'should return nil and not update complete installation' do
         expect(installation.complete_installation!).to eq(nil)
@@ -51,8 +51,8 @@ RSpec.describe Installation do
 
   describe '#register_completed_install' do
     let!(:account) { create(:account) }
-    let!(:installation) { create(:installation) }
-    let!(:user) { create(:user) }
+    let!(:installation) { create(:installation, account:) }
+    let!(:user) { create(:user, account:) }
     context 'when valid registration' do
       before do
         stub_request(:post, 'https://store.woofedcrm.com/installations/complete')

@@ -21,9 +21,11 @@
 #  fk_rails_...  (deal_id => deals.id)
 #  fk_rails_...  (product_id => products.id)
 #
-class DealProduct < ApplicationRecord
+class DealProduct < AccountRecord
   include DealProduct::Broadcastable
   include DealProduct::EventCreator
+
   belongs_to :product
   belongs_to :deal
+  belongs_to :account
 end

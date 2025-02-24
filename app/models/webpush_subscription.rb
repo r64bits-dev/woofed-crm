@@ -20,6 +20,7 @@
 #
 class WebpushSubscription < ApplicationRecord
   belongs_to :user
+  delegate :account, to: :user
   validates :endpoint, presence: true
   validates :p256dh_key, presence: true
   validates :auth_key, presence: true, uniqueness: true

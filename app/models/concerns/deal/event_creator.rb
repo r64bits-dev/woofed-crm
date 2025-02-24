@@ -61,6 +61,7 @@ module Deal::EventCreator
       done: true,
       from_me: true,
       contact:,
+      account: self.account,
       additional_attributes: {
         stage_id: stage.id,
         stage_name: stage.name,

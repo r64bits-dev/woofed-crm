@@ -1,6 +1,4 @@
 class ApplicationRecord < ActiveRecord::Base
-  include Applicable
-
   self.abstract_class = true
 
   def self.human_enum_name(enum_name, enum_value)

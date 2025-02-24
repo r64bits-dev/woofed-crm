@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_account
-    @account = Current.account
+    Current.account = if user_signed_in?
+      current_user.account
+    else
+      nil
+    end
   end
 end

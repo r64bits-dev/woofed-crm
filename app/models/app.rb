@@ -9,7 +9,16 @@
 #  settings   :jsonb            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  account_id :bigint           not null
 #
-class App < ApplicationRecord
+# Indexes
+#
+#  index_apps_on_account_id  (account_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class App < AccountRecord
   enum kind: { 'wpp_connect': 'wpp_connect' }
 end

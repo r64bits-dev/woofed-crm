@@ -11,13 +11,19 @@
 #  phone                 :string           default(""), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  account_id            :bigint           not null
 #  app_id                :bigint
 #
 # Indexes
 #
-#  index_contacts_on_app  (app_type,app_id)
+#  index_contacts_on_account_id  (account_id)
+#  index_contacts_on_app         (app_type,app_id)
 #
-class Contact < ApplicationRecord
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Contact < AccountRecord
   include Labelable
   include ChatwootLabels
   include CustomAttributes
@@ -30,6 +36,7 @@ class Contact < ApplicationRecord
 
   has_many :deals, dependent: :destroy
   belongs_to :app, polymorphic: true, optional: true
+  belongs_to :account
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[additional_attributes app_id app_type created_at custom_attributes email full_name id

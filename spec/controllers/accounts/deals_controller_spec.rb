@@ -353,7 +353,7 @@ RSpec.describe Accounts::DealsController, type: :request do
   end
 
   describe 'GET /accounts/{account.id}/deals/:id/deal_assignees' do
-    let!(:deal) { create(:deal, stage:, contact:) }
+    let!(:deal) { create(:deal, account:, stage:, contact:) }
     let!(:deal_assignee) { create(:deal_assignee, deal:, user:) }
 
     context 'when it is an unauthenticated user' do

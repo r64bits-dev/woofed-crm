@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Accounts::WebpushSubscriptionsController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, account:) }
 
   describe 'POST /accounts/{:account.id}/webpush_subscriptions' do
     let(:valid_params) do

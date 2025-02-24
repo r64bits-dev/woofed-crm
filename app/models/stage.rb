@@ -20,9 +20,10 @@
 #  fk_rails_...  (account_id => accounts.id)
 #  fk_rails_...  (pipeline_id => pipelines.id)
 #
-class Stage < ApplicationRecord
+class Stage < AccountRecord
   belongs_to :pipeline
   acts_as_list scope: :pipeline
+  belongs_to :account
   has_many :deals, dependent: :destroy
 
   after_update_commit -> { Stages::BroadcastUpdatesWorker.perform_async(id) }

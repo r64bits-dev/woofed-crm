@@ -1,5 +1,3 @@
 class Current < ActiveSupport::CurrentAttributes
-  def account
-    Account.first
-  end
+  attribute :account
 end

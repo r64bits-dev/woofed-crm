@@ -3,13 +3,13 @@ require 'sidekiq/testing'
 
 RSpec.describe Accounts::Contacts::EventsController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
-  let!(:contact) { create(:contact) }
-  let!(:chatwoot) { create(:apps_chatwoots, :skip_validate) }
-  let(:evolution_api_connected) { create(:apps_evolution_api, :connected) }
-  let!(:pipeline) { create(:pipeline) }
-  let!(:stage) { create(:stage, pipeline:) }
-  let!(:deal) { create(:deal, contact:, stage:) }
+  let!(:user) { create(:user, account: account) }
+  let!(:contact) { create(:contact, account: account) }
+  let!(:chatwoot) { create(:apps_chatwoots, :skip_validate, account: account) }
+  let(:evolution_api_connected) { create(:apps_evolution_api, :connected, account: account) }
+  let!(:pipeline) { create(:pipeline, account: account) }
+  let!(:stage) { create(:stage, account: account, pipeline: pipeline) }
+  let!(:deal) { create(:deal, account:, contact: contact, stage: stage) }
   let(:conversation_response) do
     File.read('spec/integration/use_cases/accounts/apps/chatwoots/get_conversations.json')
   end
@@ -235,7 +235,7 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
             stub_request(:post, /contacts/)
               .to_return(body: invalid_send_text_response, status: 400, headers: { 'Content-Type' => 'application/json' })
           end
-          let(:contact_no_phone) { create(:contact, phone: '') }
+          let(:contact_no_phone) { create(:contact, phone: '', account: account) }
           it 'done should return false' do
             params = valid_params.deep_merge(event: { kind: 'evolution_api_message', app_type: 'Apps::EvolutionApi',
                                                       app_id: evolution_api_connected.id, send_now: 'true' })
@@ -274,7 +274,7 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
         end
       end
       context 'when there is user with push notification enabled' do
-        let!(:user_webpush_enable) { create(:user, :push_notifications_enabled, email: 'teste@test.com') }
+        let!(:user_webpush_enable) { create(:user, :push_notifications_enabled, email: 'teste@test.com', account: account) }
         context 'when there is a valid webpush subscription' do
           before do
             allow(WebPush).to receive(:payload_send).and_return(double(Net::HTTPCreated, code: '201',
@@ -328,7 +328,7 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
                                                      headers: { 'Content-Type' => 'application/json' })
     end
 
-    let(:event) { create(:event, contact:, deal:, kind: 'activity') }
+    let(:event) { create(:event, contact:, deal:, kind: 'activity', account: account) }
     context 'when it is unthenticated user' do
       it 'returns unauthorized' do
         patch "/accounts/#{account.id}/contacts/#{contact.id}/events/#{event.id}"
@@ -431,7 +431,7 @@ RSpec.describe Accounts::Contacts::EventsController, type: :request do
     end
   end
   describe 'DELETE /accounts/#{account.id}/contacts/#{contact.id}/events/#{event.id}' do
-    let(:event) { create(:event, contact:, deal:, kind: 'activity') }
+    let(:event) { create(:event, contact:, deal:, kind: 'activity', account: account) }
     context 'when it is unthenticated user' do
       it 'returns unauthorized' do
         delete "/accounts/#{account.id}/contacts/#{contact.id}/events/#{event.id}"

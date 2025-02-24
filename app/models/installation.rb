@@ -21,7 +21,7 @@
 #
 #  fk_rails_...  (account_id => accounts.id)
 #
-class Installation < ApplicationRecord
+class Installation < AccountRecord
   include Installation::Complete
 
   belongs_to :user, optional: true
@@ -29,6 +29,8 @@ class Installation < ApplicationRecord
   validates_presence_of :key1
   validates_presence_of :key2
   validates_presence_of :token
+
+  before_validation :set_id, on: :create
 
   enum status: {
     in_progress: 0,
@@ -43,5 +45,11 @@ class Installation < ApplicationRecord
     Installation.first&.status != 'completed'
   rescue StandardError
     true
+  end
+
+  private
+
+  def set_id
+    self.id ||= SecureRandom.uuid
   end
 end

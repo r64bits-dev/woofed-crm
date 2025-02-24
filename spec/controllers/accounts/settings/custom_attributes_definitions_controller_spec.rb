@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Accounts::Settings::CustomAttributesDefinitionsController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
-  let(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute) }
+  let!(:user) { create(:user, account:) }
+  let(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute, account:) }
   let(:custom_attribute_definition_first) { CustomAttributeDefinition.first }
 
   describe 'POST /accounts/{account.id}/custom_attributes_definitions' do
@@ -45,7 +45,7 @@ RSpec.describe Accounts::Settings::CustomAttributesDefinitionsController, type: 
           end
           context 'when attribute_key already exists' do
             let!(:custom_attribute_definition) do
-              create(:custom_attribute_definition, :contact_attribute)
+              create(:custom_attribute_definition, :contact_attribute, account:)
             end
             it 'should not create' do
               params = { custom_attribute_definition: { 'attribute_model' => custom_attribute_definition.attribute_model, 'attribute_key' => custom_attribute_definition.attribute_key,
@@ -93,7 +93,7 @@ RSpec.describe Accounts::Settings::CustomAttributesDefinitionsController, type: 
   end
 
   describe 'GET /accounts/{account.id}/custom_attributes_definitions' do
-    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute) }
+    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute, account:) }
 
     context 'when it is an unauthenticated user' do
       it 'returns unauthorized' do
@@ -141,7 +141,7 @@ RSpec.describe Accounts::Settings::CustomAttributesDefinitionsController, type: 
       end
       context 'when updating attribute_key to an existing attribute_key' do
         let!(:another_custom_attribute_definition) do
-          create(:custom_attribute_definition, :contact_attribute, attribute_display_name: 'RG field', attribute_key: 'rg')
+          create(:custom_attribute_definition, :contact_attribute, attribute_display_name: 'RG field', attribute_key: 'rg', account:)
         end
         invalid_params = { custom_attribute_definition: { 'attribute_key' => 'rg' } }
         it 'should not update' do
@@ -155,7 +155,7 @@ RSpec.describe Accounts::Settings::CustomAttributesDefinitionsController, type: 
   end
 
   describe 'DELETE /accounts/{account.id}/custom_attributes_definitions/{custom_attribute_definition.id}' do
-    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute) }
+    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :contact_attribute, account:) }
     context 'when it is an unauthenticated user' do
       it 'returns unauthorized' do
         delete "/accounts/#{account.id}/custom_attributes_definitions/#{custom_attribute_definition.id}"

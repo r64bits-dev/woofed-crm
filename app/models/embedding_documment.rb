@@ -22,7 +22,8 @@
 #
 #  fk_rails_...  (account_id => accounts.id)
 #
-class EmbeddingDocumment < ApplicationRecord
+class EmbeddingDocumment < AccountRecord
   belongs_to :source, polymorphic: true, optional: true
   has_neighbors :embedding, normalize: true
+  belongs_to :account
 end

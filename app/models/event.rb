@@ -31,7 +31,7 @@
 #
 #  fk_rails_...  (account_id => accounts.id)
 #
-class Event < ApplicationRecord
+class Event < AccountRecord
   include Event::Decorators
   include Deal::Broadcastable
   # default_scope { order('created_at DESC') }
@@ -39,6 +39,7 @@ class Event < ApplicationRecord
                          deal_product_removed].freeze
   belongs_to :deal, optional: true
   belongs_to :contact
+  belongs_to :account
   # belongs_to :event_kind, default: -> { EventKind }
   # belongs_to :record, polymorphic: true
   belongs_to :app, polymorphic: true, optional: true
