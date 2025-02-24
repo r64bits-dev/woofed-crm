@@ -11,11 +11,17 @@
 #  token      :string           default(""), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  account_id :bigint           not null
 #  user_id    :bigint
 #
 # Indexes
 #
-#  index_installations_on_user_id  (user_id)
+#  index_installations_on_account_id  (account_id)
+#  index_installations_on_user_id     (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
 #
 require 'rails_helper'
 
@@ -64,8 +70,9 @@ RSpec.describe Installation do
       end
     end
 
-    context 'when is inatalled' do
-      let!(:installation) { create(:installation, status: 'completed') }
+    context 'when is installed' do
+      let!(:account) { create(:account) }
+      let!(:installation) { create(:installation, status: 'completed', account:) }
 
       it do
         expect(Installation.installation_flow?).to eq(false)

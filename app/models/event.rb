@@ -15,17 +15,23 @@
 #  title                 :string           default(""), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  account_id            :bigint           not null
 #  app_id                :bigint
 #  contact_id            :bigint
 #  deal_id               :bigint
 #
 # Indexes
 #
+#  index_events_on_account_id  (account_id)
 #  index_events_on_app         (app_type,app_id)
 #  index_events_on_contact_id  (contact_id)
 #  index_events_on_deal_id     (deal_id)
 #
-class Event < ApplicationRecord
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Event < AccountRecord
   include Event::Decorators
   include Deal::Broadcastable
   # default_scope { order('created_at DESC') }
@@ -33,6 +39,7 @@ class Event < ApplicationRecord
                          deal_product_removed].freeze
   belongs_to :deal, optional: true
   belongs_to :contact
+  belongs_to :account
   # belongs_to :event_kind, default: -> { EventKind }
   # belongs_to :record, polymorphic: true
   belongs_to :app, polymorphic: true, optional: true

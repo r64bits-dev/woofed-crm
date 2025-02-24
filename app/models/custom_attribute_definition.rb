@@ -9,8 +9,17 @@
 #  attribute_model        :integer          default("contact_attribute")
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  account_id             :bigint           not null
 #
-class CustomAttributeDefinition < ApplicationRecord
+# Indexes
+#
+#  index_custom_attribute_definitions_on_account_id  (account_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class CustomAttributeDefinition < AccountRecord
   include CustomAttributeDefinition::Broadcastable
   scope :with_attribute_model, lambda { |attribute_model|
                                  attribute_model.presence && where(attribute_model: attribute_model)
@@ -19,8 +28,10 @@ class CustomAttributeDefinition < ApplicationRecord
   validates :attribute_display_name, presence: true
   validates :attribute_key,
             presence: true,
-            uniqueness: { scope: %i[attribute_model] }
+            uniqueness: { scope: %i[account_id attribute_model] }
   validates :attribute_model, presence: true
 
   enum attribute_model: { contact_attribute: 0, deal_attribute: 1, product_attribute: 2 }
+
+  belongs_to :account
 end

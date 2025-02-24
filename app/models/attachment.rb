@@ -7,13 +7,19 @@
 #  file_type       :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  account_id      :bigint           not null
 #  attachable_id   :bigint           not null
 #
 # Indexes
 #
+#  index_attachments_on_account_id  (account_id)
 #  index_attachments_on_attachable  (attachable_type,attachable_id)
 #
-class Attachment < ApplicationRecord
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Attachment < AccountRecord
   ACCEPTABLE_FILE_TYPES = %w[
     text/csv text/plain text/rtf
     application/json application/pdf
@@ -32,6 +38,7 @@ class Attachment < ApplicationRecord
   enum file_type: { image: 0, audio: 1, video: 2, file: 3, location: 4, fallback: 5, share: 6, story_mention: 7,
                     contact: 8 }
 
+  before_validation :set_account_from_attachable
   before_validation :fill_file_type
 
   def media_file?(file_content_type)
@@ -70,5 +77,11 @@ class Attachment < ApplicationRecord
 
   def acceptable_file_size
     file.byte_size > 40.megabytes
+  end
+
+  private
+
+  def set_account_from_attachable
+    self.account = attachable.account
   end
 end

@@ -10,13 +10,20 @@
 #  status           :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  account_id       :bigint           not null
 #  source_id        :bigint
 #
 # Indexes
 #
-#  index_embedding_documments_on_source  (source_type,source_id)
+#  index_embedding_documments_on_account_id  (account_id)
+#  index_embedding_documments_on_source      (source_type,source_id)
 #
-class EmbeddingDocumment < ApplicationRecord
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class EmbeddingDocumment < AccountRecord
   belongs_to :source, polymorphic: true, optional: true
   has_neighbors :embedding, normalize: true
+  belongs_to :account
 end

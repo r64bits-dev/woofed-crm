@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Accounts::UsersController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
-  let(:product) { create(:product) }
-  let!(:contact) { create(:contact) }
-  let!(:pipeline) { create(:pipeline) }
-  let!(:stage) { create(:stage, pipeline: pipeline) }
+  let!(:user) { create(:user, account:) }
+  let(:product) { create(:product, account:) }
+  let!(:contact) { create(:contact, account:) }
+  let!(:pipeline) { create(:pipeline, account:) }
+  let!(:stage) { create(:stage, pipeline: pipeline, account:) }
   let!(:deal) { create(:deal, stage: stage, contact: contact) }
   let(:deal_product) { create(:deal_product, deal: deal, product: product) }
   let(:product_first) { Product.first }
@@ -123,7 +123,7 @@ RSpec.describe Accounts::UsersController, type: :request do
   end
 
   describe 'GET /accounts/{account.id}/products' do
-    let!(:product) { create(:product) }
+    let!(:product) { create(:product, account:) }
 
     context 'when it is an unauthenticated user' do
       it 'returns unauthorized' do
@@ -241,9 +241,9 @@ RSpec.describe Accounts::UsersController, type: :request do
   end
 
   describe 'GET /accounts/{account.id}/products/{product.id}/edit_custom_attributes' do
-    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :product_attribute) }
+    let!(:custom_attribute_definition) { create(:custom_attribute_definition, :product_attribute, account:) }
     let!(:contact_custom_attribute_definition) do
-      create(:custom_attribute_definition, :contact_attribute)
+      create(:custom_attribute_definition, :contact_attribute, account:)
     end
 
     context 'when it is an unauthenticated user' do

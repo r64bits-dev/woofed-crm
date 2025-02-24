@@ -10,8 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_21_163538) do
+  create_schema "_heroku"
+
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -72,6 +75,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.jsonb "settings", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_apps_on_account_id"
   end
 
   create_table "apps_chatwoots", force: :cascade do |t|
@@ -87,6 +92,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "inboxes", default: [], null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_apps_chatwoots_on_account_id"
   end
 
   create_table "apps_evolution_apis", force: :cascade do |t|
@@ -101,6 +108,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "qrcode", default: "", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_apps_evolution_apis_on_account_id"
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -109,6 +118,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.integer "file_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_attachments_on_account_id"
     t.index ["attachable_type", "attachable_id"], name: "index_attachments_on_attachable"
   end
 
@@ -122,6 +133,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.bigint "app_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_contacts_on_account_id"
     t.index ["app_type", "app_id"], name: "index_contacts_on_app"
   end
 
@@ -132,6 +145,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.text "attribute_description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_custom_attribute_definitions_on_account_id"
   end
 
   create_table "deal_assignees", force: :cascade do |t|
@@ -149,6 +164,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.bigint "deal_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_deal_products_on_account_id"
     t.index ["deal_id"], name: "index_deal_products_on_deal_id"
     t.index ["product_id"], name: "index_deal_products_on_product_id"
   end
@@ -164,6 +181,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.bigint "pipeline_id"
     t.integer "position", default: 1, null: false
     t.integer "created_by_id"
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_deals_on_account_id"
     t.index ["contact_id"], name: "index_deals_on_contact_id"
     t.index ["created_by_id"], name: "index_deals_on_created_by_id"
     t.index ["pipeline_id"], name: "index_deals_on_pipeline_id"
@@ -179,6 +198,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.vector "embedding", limit: 1536
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_embedding_documments_on_account_id"
     t.index ["source_type", "source_id"], name: "index_embedding_documments_on_source"
   end
 
@@ -198,6 +219,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.datetime "updated_at", null: false
     t.string "title", default: "", null: false
     t.boolean "auto_done", default: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_events_on_account_id"
     t.index ["app_type", "app_id"], name: "index_events_on_app"
     t.index ["contact_id"], name: "index_events_on_contact_id"
     t.index ["deal_id"], name: "index_events_on_deal_id"
@@ -299,6 +322,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_installations_on_account_id"
     t.index ["user_id"], name: "index_installations_on_user_id"
   end
 
@@ -499,6 +524,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.string "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_pipelines_on_account_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -511,6 +538,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.jsonb "additional_attributes", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_products_on_account_id"
   end
 
   create_table "stages", force: :cascade do |t|
@@ -519,6 +548,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.integer "position", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_stages_on_account_id"
     t.index ["pipeline_id"], name: "index_stages_on_pipeline_id"
   end
 
@@ -567,6 +598,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.jsonb "notifications", default: "{\"webpush_notify_on_event_expired\":false}", null: false
     t.string "avatar_url", default: "", null: false
     t.string "job_description", default: "other", null: false
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -576,6 +609,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "active"
+    t.bigint "account_id", null: false
+    t.index ["account_id"], name: "index_webhooks_on_account_id"
   end
 
   create_table "webpush_subscriptions", force: :cascade do |t|
@@ -590,19 +625,35 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_180255) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "apps", "accounts"
+  add_foreign_key "apps_chatwoots", "accounts"
+  add_foreign_key "apps_evolution_apis", "accounts"
+  add_foreign_key "attachments", "accounts"
+  add_foreign_key "contacts", "accounts"
+  add_foreign_key "custom_attribute_definitions", "accounts"
   add_foreign_key "deal_assignees", "deals"
   add_foreign_key "deal_assignees", "users"
+  add_foreign_key "deal_products", "accounts"
   add_foreign_key "deal_products", "deals"
   add_foreign_key "deal_products", "products"
+  add_foreign_key "deals", "accounts"
   add_foreign_key "deals", "contacts"
   add_foreign_key "deals", "stages"
   add_foreign_key "deals", "users", column: "created_by_id", on_delete: :nullify
+  add_foreign_key "embedding_documments", "accounts"
+  add_foreign_key "events", "accounts"
+  add_foreign_key "installations", "accounts"
   add_foreign_key "motor_alert_locks", "motor_alerts", column: "alert_id"
   add_foreign_key "motor_alerts", "motor_queries", column: "query_id"
   add_foreign_key "motor_note_tag_tags", "motor_note_tags", column: "tag_id"
   add_foreign_key "motor_note_tag_tags", "motor_notes", column: "note_id"
   add_foreign_key "motor_taggable_tags", "motor_tags", column: "tag_id"
+  add_foreign_key "pipelines", "accounts"
+  add_foreign_key "products", "accounts"
+  add_foreign_key "stages", "accounts"
   add_foreign_key "stages", "pipelines"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "users", "accounts"
+  add_foreign_key "webhooks", "accounts"
   add_foreign_key "webpush_subscriptions", "users"
 end

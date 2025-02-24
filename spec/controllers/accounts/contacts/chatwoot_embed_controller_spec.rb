@@ -3,9 +3,9 @@ require 'sidekiq/testing'
 
 RSpec.describe Accounts::Contacts::ChatwootEmbedController, type: :request do
   let!(:account) { create(:account) }
-  let!(:user) { create(:user) }
-  let!(:contact) { create(:contact) }
-  let!(:chatwoot) { create(:apps_chatwoots, :skip_validate) }
+  let!(:user) { create(:user, account: account) }
+  let!(:contact) { create(:contact, account: account) }
+  let!(:chatwoot) { create(:apps_chatwoots, :skip_validate, account: account) }
   let(:last_contact) { Contact.last }
 
   describe 'GET /accounts/{account.id}/contacts/chatwoot_embed/{contact.id}' do

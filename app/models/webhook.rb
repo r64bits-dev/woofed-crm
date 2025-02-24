@@ -7,8 +7,20 @@
 #  url        :string           default(""), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  account_id :bigint           not null
 #
-class Webhook < ApplicationRecord
+# Indexes
+#
+#  index_webhooks_on_account_id  (account_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Webhook < AccountRecord
+  belongs_to :account
+
+  validates :account_id, presence: true
   validates :url, presence: true, format: URI::DEFAULT_PARSER.make_regexp(%w[http https])
   validates :status, presence: true
 

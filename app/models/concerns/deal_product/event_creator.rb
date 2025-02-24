@@ -27,6 +27,7 @@ module DealProduct::EventCreator
         done: true,
         from_me: true,
         contact: deal.contact,
+        account: deal.account,
         additional_attributes: {
           product_id: product.id,
           deal_id: deal.id,
@@ -48,6 +49,7 @@ module DealProduct::EventCreator
         done: true,
         from_me: true,
         contact: deal.contact,
+        account: deal.account,
         additional_attributes: {
           product_id:,
           deal_id:,

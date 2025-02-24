@@ -6,7 +6,7 @@ class Accounts::Apps::EvolutionApisController < InternalController
   end
 
   def create
-    result = Accounts::Apps::EvolutionApis::Create.call(current_user, evolution_api_params)
+    result = Accounts::Apps::EvolutionApis::Create.call(current_user, evolution_api_params.merge(account: current_user.account))
     @evolution_api = result[result.keys.first]
     if result.key?(:ok)
       redirect_to pair_qr_code_account_apps_evolution_api_path(current_user.account, @evolution_api.id)
@@ -62,6 +62,6 @@ class Accounts::Apps::EvolutionApisController < InternalController
   end
 
   def evolution_api_params
-    params.require(:apps_evolution_api).permit(:name)
+    params.require(:apps_evolution_api).permit(:name).merge(account: current_user.account)
   end
 end

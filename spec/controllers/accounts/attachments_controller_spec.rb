@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Accounts::AttachmentsController, type: :request do
   let!(:account) { create(:account) }
   let!(:user) { create(:user, account: account) }
-  let!(:attachment) { create(:attachment, :for_product, :image) }
+  let!(:product) { create(:product, account: account) }
+  let!(:attachment) { create(:attachment, :for_product, :image, account: account) }
 
   describe 'DELETE /accounts/{account.id}/attachments/{attachment.id}' do
     context 'when it is an unauthenticated user' do

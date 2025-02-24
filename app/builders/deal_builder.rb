@@ -6,7 +6,7 @@ class DealBuilder
   end
 
   def build
-    @deal = Deal.new(deal_params(@params).merge(created_by_id: @user.id))
+    @deal = Deal.new(deal_params(@params).merge(created_by_id: @user.id, account_id: @user.account_id))
     build_contact if @deal.contact.blank?
     @deal
   end

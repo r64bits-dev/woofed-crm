@@ -6,9 +6,19 @@
 #  name       :string           default(""), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  account_id :bigint           not null
 #
-class Pipeline < ApplicationRecord
+# Indexes
+#
+#  index_pipelines_on_account_id  (account_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Pipeline < AccountRecord
   has_many :stages
   has_many :deals
+  belongs_to :account
   accepts_nested_attributes_for :stages, reject_if: :all_blank, allow_destroy: true
 end

@@ -9,13 +9,19 @@
 #  token      :string           default(""), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  account_id :bigint           not null
 #  user_id    :bigint
 #
 # Indexes
 #
-#  index_installations_on_user_id  (user_id)
+#  index_installations_on_account_id  (account_id)
+#  index_installations_on_user_id     (user_id)
 #
-class Installation < ApplicationRecord
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
+class Installation < AccountRecord
   include Installation::Complete
 
   belongs_to :user, optional: true
@@ -23,6 +29,8 @@ class Installation < ApplicationRecord
   validates_presence_of :key1
   validates_presence_of :key2
   validates_presence_of :token
+
+  before_validation :set_id, on: :create
 
   enum status: {
     in_progress: 0,
@@ -37,5 +45,11 @@ class Installation < ApplicationRecord
     Installation.first&.status != 'completed'
   rescue StandardError
     true
+  end
+
+  private
+
+  def set_id
+    self.id ||= SecureRandom.uuid
   end
 end
