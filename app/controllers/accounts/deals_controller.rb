@@ -18,7 +18,8 @@ class Accounts::DealsController < InternalController
   def new
     @deal = Deal.new
     @stages = current_user.account.stages
-    @deal.contact_id = params[:deal][:contact_id]
+    @contact = current_user.account.contacts.find(params[:deal][:contact_id])
+    @deal.contact = @contact
   end
 
   def new_select_contact
@@ -93,9 +94,20 @@ class Accounts::DealsController < InternalController
   def update
     @stages = @deal.pipeline.stages
     if @deal.update(deal_params)
-      redirect_to account_deal_path(current_user.account, @deal)
+      respond_to do |format|
+        format.html { redirect_to account_deal_path(current_user.account, @deal) }
+        format.json { head :ok }
+        format.js { head :ok }
+        format.turbo_stream { head :ok }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      # render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @deal.errors, status: :unprocessable_entity }
+        format.js { render json: @deal.errors, status: :unprocessable_entity }
+        format.turbo_stream { render json: @deal.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -159,7 +171,7 @@ class Accounts::DealsController < InternalController
   # Only allow a list of trusted parameters through.
   def deal_params
     params.require(:deal).permit(
-      :name, :status, :stage_id, :contact_id, :position,
+      :name, :status, :stage_id, :contact_id, :position, :account_id,
       contact_attributes: %i[id full_name phone email],
       custom_attributes: {}
     )
