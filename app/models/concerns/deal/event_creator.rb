@@ -40,6 +40,7 @@ module Deal::EventCreator
       done: true,
       contact:,
       from_me: true,
+      account: self.account,
       additional_attributes: {
         old_stage_id: old_stage.id,
         old_stage_name: old_stage.name,
