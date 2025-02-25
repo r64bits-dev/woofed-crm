@@ -18,10 +18,8 @@ class Accounts::DealsController < InternalController
   def new
     @deal = Deal.new
     @stages = current_user.account.stages
-    if params[:deal] && params[:deal][:contact_id].present?
-      @contact = current_user.account.contacts.find(params[:deal][:contact_id])
-      @deal.contact = @contact
-    end
+    @contact = current_user.account.contacts.find(params[:deal][:contact_id])
+    @deal.contact = @contact
   end
 
   def new_select_contact
