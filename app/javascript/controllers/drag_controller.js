@@ -18,20 +18,32 @@ export default class extends Controller {
   async end(event) {
     event.from.classList.add("pointer-events-none");
     event.to.classList.add("pointer-events-none");
+
     const dealId = event.item.dataset.id;
     const accountId = event.item.dataset.accountId;
     const toStageId = event.to.dataset.id;
     const newPosition = new Position(event).getNewPosition();
+
     let data = new FormData();
     data.append("deal[position]", newPosition);
     data.append("deal[stage_id]", toStageId);
+
     Rails.ajax({
       url: this.data
         .get("url")
         .replace(":deal_id", dealId)
         .replace(":account_id", accountId),
       type: "PATCH",
+      dataType: 'json',
       data: data,
+      success: () => {
+        event.from.classList.remove("pointer-events-none");
+        event.to.classList.remove("pointer-events-none");
+      },
+      error: () => {
+        event.from.classList.remove("pointer-events-none");
+        event.to.classList.remove("pointer-events-none");
+      }
     });
   }
 }
